@@ -5,11 +5,12 @@ import services.*;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class PersonalFinanceManagerApp {
+
 
     private static final Scanner scanner = new Scanner(System.in);
+    private static final double BACK_OPTION = 10;
 
-    public static void main(String[] args) {
+      void main() {
 
         TransactionServiceImpl transactionService = new TransactionServiceImpl();
         BudgetServiceImpl budgetService = new BudgetServiceImpl(transactionService);
@@ -30,6 +31,10 @@ public class PersonalFinanceManagerApp {
 
                 displayMenu();
                 int choice = readChoice();
+
+                if (choice == BACK_OPTION) {
+                    return;
+                }
 
                 switch (choice) {
                     case 1:
@@ -206,31 +211,63 @@ public class PersonalFinanceManagerApp {
                                 t.getType() + " | " +
                                 t.getCategory().getName() + " | " +
                                 t.getAmount() + " | " +
-                                t.getDescription()
+                                t.getDescription() + " | Available Balance: "+t.getAmount()
                 )
         );
     }
 
     private static void generateReport(TransactionService transactionService) {
 
+        System.out.println("Select report type:");
+        System.out.println("1. Weekly");
+        System.out.println("2. Monthly");
+        System.out.println("3. Yearly");
+        System.out.println("10. Back to Main Menu");
+
+        int choice = scanner.nextInt();
+
+        if (choice == BACK_OPTION) {
+            return;
+        }
+        LocalDate now = LocalDate.now();
+        LocalDate startDate;
+
+        switch (choice) {
+            case 1:
+                startDate = now.minusDays(7);
+                break;
+            case 2:
+                startDate = now.minusMonths(1);
+                break;
+            case 3:
+                startDate = now.minusYears(1);
+                break;
+            default:
+                System.out.println("Invalid choice");
+                return;
+        }
+
         double income = transactionService.getTransactions().stream()
+                .filter(t -> !t.getDate().isBefore(startDate))
                 .filter(t -> t.getType() == TransactionType.INCOME)
                 .mapToDouble(Transaction::getAmount)
                 .sum();
 
         double expense = transactionService.getTransactions().stream()
+                .filter(t -> !t.getDate().isBefore(startDate))
                 .filter(t -> t.getType() == TransactionType.EXPENSE)
                 .mapToDouble(Transaction::getAmount)
                 .sum();
 
-//        FinancialReport report = new FinancialReport.Builder()
-//                .setTotalIncome(income)
-//                .setTotalExpense(expense)
-//                .build();
+        FinancialReport report = new FinancialReport.Builder()
+                .setTotalIncome(income)
+                .setTotalExpense(expense)
+                .build();
 
-        System.out.println("\n--- Report ---");
-        System.out.println("Total Income : " + income);
-        System.out.println("Total Expense: " + expense);
-        System.out.println("Savings      : " + (income - expense));
+        System.out.println("\n--- Financial Report ---");
+        System.out.println("Income : " + report.getTotalIncome());
+        System.out.println("Expense: " + report.getTotalExpense());
+        System.out.println("Savings: " + report.getSavings());
     }
-}
+
+
