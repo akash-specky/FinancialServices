@@ -9,6 +9,18 @@ public class FinancialReport {
 
     }
 
+    public double getTotalIncome() {
+        return totalIncome;
+    }
+
+    public double getTotalExpense() {
+        return totalExpense;
+    }
+
+    public double getSavings() {
+        return savings;
+    }
+
     static public class Builder {
         private double totalIncome;
         private double totalExpense;
