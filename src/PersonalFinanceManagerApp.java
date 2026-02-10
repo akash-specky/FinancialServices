@@ -249,13 +249,13 @@ import java.util.Scanner;
 
         double income = transactionService.getTransactions().stream()
                 .filter(t -> !t.getDate().isBefore(startDate))
-                .filter(t -> t.getType() == TransactionType.INCOME)
+                .filter(t -> t.getType().equals(TransactionType.INCOME) )
                 .mapToDouble(Transaction::getAmount)
                 .sum();
 
         double expense = transactionService.getTransactions().stream()
                 .filter(t -> !t.getDate().isBefore(startDate))
-                .filter(t -> t.getType() == TransactionType.EXPENSE)
+                .filter(t -> t.getType().equals(TransactionType.EXPENSE))
                 .mapToDouble(Transaction::getAmount)
                 .sum();
 
