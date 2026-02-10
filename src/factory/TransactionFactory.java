@@ -25,12 +25,12 @@ public class TransactionFactory {
     }
 
     public static Transaction createExpense(double amount, Category category,
-                                            LocalDate date, String description ) {
+                                            LocalDate date, String description,TransactionType type ) {
 
         return new Transaction(
                 UUID.randomUUID().toString(),
                 amount,
-                TransactionType.EXPENSE,
+                type,
                 category,
                 date,
                 description

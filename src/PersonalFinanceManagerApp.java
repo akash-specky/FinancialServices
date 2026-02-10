@@ -50,7 +50,7 @@ import java.util.Scanner;
                         addSavingsGoal(savingsService);
                         break;
                     case 5:
-                        addSavingsAmount(savingsService);
+                        addSavingsAmount(savingsService,transactionService);
                         break;
                     case 6:
                         addBillReminder(reminderService);
@@ -133,7 +133,8 @@ import java.util.Scanner;
                 amount,
                 category,
                 LocalDate.now(),
-                description
+                description,
+                TransactionType.EXPENSE
         );
 
         transactionService.addTransaction(expense);
@@ -166,7 +167,7 @@ import java.util.Scanner;
         System.out.println("Savings goal added.");
     }
 
-    private static void addSavingsAmount(SavingsService savingsService) {
+    private static void addSavingsAmount(SavingsService savingsService,TransactionService transactionService) {
         scanner.nextLine();
         System.out.print("Enter goal name: ");
         String goalName = scanner.nextLine();
@@ -174,7 +175,7 @@ import java.util.Scanner;
         System.out.print("Enter amount: ");
         double amount = scanner.nextDouble();
 
-        savingsService.addSavings(goalName, amount);
+        savingsService.addSavings(goalName, amount,transactionService);
     }
 
     private static void addBillReminder(ReminderService reminderService) {

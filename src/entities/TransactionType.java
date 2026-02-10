@@ -2,5 +2,6 @@ package entities;
 
 public enum TransactionType {
     INCOME,
-    EXPENSE
+    EXPENSE,
+    SAVINGS
 }
